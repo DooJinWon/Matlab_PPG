@@ -1,9 +1,13 @@
-이 저장소는 PPG(Photoplethysmogram) 신호를 기반으로 ABP(Arterial Blood Pressure) 평균값을 예측하는 MATLAB 프로젝트입니다. 데이터 전처리 과정부터 예측 모델 학습, 그리고 예측 결과를 실제 혈압 단위(mmHg)로 변환하는 단계까지 전 과정을 포함하고 있습니다.
+This repository contains a MATLAB project for predicting the mean Arterial Blood Pressure (ABP) from Photoplethysmogram (PPG) signals. It covers the full pipeline, from data preprocessing to model training, and finally converting the predicted results into real blood pressure units (mmHg).
 
-먼저, 데이터 전처리 단계에서는 원시 PPG와 ABP 신호를 일정 길이의 윈도우로 분할하고, 각 윈도우마다 세 개의 채널을 구성합니다. 첫 번째 채널은 z-score 정규화를 적용한 원본 PPG 신호이고, 두 번째 채널은 PPG의 1차 미분, 세 번째 채널은 2차 미분 값입니다. 각 윈도우의 레이블은 첫 번째 채널(PPG)의 평균값으로 설정되며, 전체 데이터는 학습 세트와 테스트 세트로 나누어 사용됩니다.
+In the data preprocessing stage, raw PPG and ABP signals are segmented into fixed-length windows. For each window, three input channels are created:  
+1) The original PPG signal with z-score normalization applied,  
+2) The first derivative of the PPG, and  
+3) The second derivative of the PPG.  
+The label for each window is defined as the mean value of the first channel (PPG). The dataset is then split into training and testing sets.
 
-이후 예측 모델은 두 가지 버전으로 제공됩니다. 첫 번째는 LSTM(Long Short-Term Memory) 기반 모델로, 시계열 데이터에서 장기 의존성을 학습하는 데 유리합니다. 두 번째는 GRU(Gated Recurrent Unit) 기반 모델로, LSTM보다 구조가 단순하고 연산량이 적어 학습 속도가 빠릅니다. 두 모델 모두 입력으로 3채널 PPG 시퀀스를 받아 마지막 시점의 특성을 기반으로 ABP 평균을 예측합니다. 학습에는 Adam 최적화 알고리즘과 Gradient Clipping이 적용되며, 검증 데이터셋을 활용해 모델 성능을 모니터링합니다.
+Two prediction model variants are provided. The first is based on Long Short-Term Memory (LSTM) networks, which are well-suited for learning long-term dependencies in sequential data. The second uses Gated Recurrent Units (GRU), which have a simpler architecture and require fewer computations, allowing for faster training. Both models take the 3-channel PPG sequence as input and predict the mean ABP using the features extracted from the final time step. Training is performed with the Adam optimizer and gradient clipping, and model performance is monitored using a validation set.
 
-모델의 출력은 표준화된 단위의 예측값이므로, 이를 실제 혈압 단위(mmHg)로 변환하는 후처리 과정이 필요합니다. 변환은 학습 데이터의 평균과 표준편차를 사용하여 수행하며, 이를 통해 임상적으로 해석 가능한 혈압 예측값을 얻을 수 있습니다. 변환된 결과는 RMSE(평균제곱근오차)와 Pearson 상관계수를 계산해 모델 성능을 정량적으로 평가하며, 시간축 그래프와 산점도를 통해 시각적으로도 확인할 수 있습니다.
+Since the models output predictions in standardized units, a post-processing step converts these values into real blood pressure units (mmHg). This conversion uses the mean and standard deviation of the training targets, enabling clinically interpretable results. The converted predictions are evaluated using Root Mean Squared Error (RMSE) and Pearson’s correlation coefficient, and visualized with time-series plots and parity plots for easier interpretation.
 
-이 프로젝트는 MATLAB Deep Learning Toolbox를 기반으로 작성되었으며, 연구 및 실험 목적으로 활용할 수 있습니다. 의료 진단에는 사용할 수 없으며, 데이터 특성에 따라 윈도우 길이, stride, 은닉 유닛 수 등의 파라미터를 조정하는 것이 권장됩니다.
+This project is implemented using the MATLAB Deep Learning Toolbox and is intended for research and experimental purposes. It is not suitable for medical diagnosis. Users are encouraged to adjust parameters such as window length, stride, and the number of hidden units according to the characteristics of their dataset.
