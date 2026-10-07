@@ -1,3 +1,5 @@
+# MATLAB PPG Modeling Experiments
+
 This repository contains a MATLAB project for predicting the mean Arterial Blood Pressure (ABP) from Photoplethysmogram (PPG) signals. It covers the full pipeline, from data preprocessing to model training, and finally converting the predicted results into real blood pressure units (mmHg).
 
 In the data preprocessing stage, raw PPG and ABP signals are segmented into fixed-length windows. For each window, three input channels are created:  
@@ -11,3 +13,14 @@ Two prediction model variants are provided. The first is based on Long Short-Ter
 Since the models output predictions in standardized units, a post-processing step converts these values into real blood pressure units (mmHg). This conversion uses the mean and standard deviation of the training targets, enabling clinically interpretable results. The converted predictions are evaluated using Root Mean Squared Error (RMSE) and Pearson’s correlation coefficient, and visualized with time-series plots and parity plots for easier interpretation.
 
 This project is implemented using the MATLAB Deep Learning Toolbox and is intended for research and experimental purposes. It is not suitable for medical diagnosis. Users are encouraged to adjust parameters such as window length, stride, and the number of hidden units according to the characteristics of their dataset.
+
+## Source layout
+
+| Script | Purpose |
+|---|---|
+| [preprocessing.m](src/preprocessing.m) | Signal window preparation |
+| [prediction_LSTM.m](src/prediction_LSTM.m) | LSTM experiment |
+| [prediction_GRU.m](src/prediction_GRU.m) | GRU experiment |
+| [unit_mmHg.m](src/unit_mmHg.m) | Output conversion and evaluation |
+
+Run the scripts with `src/` as MATLAB's current folder and supply the expected dataset/workspace variables. Moving the scripts does not change their algorithms.
